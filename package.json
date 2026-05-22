@@ -1,5 +1,5 @@
 {
-  "name": "python-marked-strings",
+  "name": "py-marked-strings",
   "displayName": "Python Marked Strings",
   "publisher": "vietspaceanh",
   "version": "0.1.0",
@@ -17,7 +17,7 @@
   "contributes": {
     "grammars": [
       {
-        "scopeName": "python-marked-strings",
+        "scopeName": "py-marked-strings",
         "path": "./syntaxes/injection.json",
         "injectTo": ["source.python"],
         "embeddedLanguages": {
