@@ -2,7 +2,14 @@
   "name": "py-marked-strings",
   "displayName": "Python Marked Strings",
   "publisher": "vietspaceanh",
-  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vietspaceanh/python-marked-strings"
+  },
+  "bugs": {
+    "url": "https://github.com/vietspaceanh/python-marked-strings/issues"
+  },
+  "version": "0.1.1",
   "description": "Highlight SQL, Markdown and HTML inside Python marked strings using markers like \"\"\"md, \"\"\"sql, \"\"\"html",
   "engines": {
     "vscode": "^1.100.0"
