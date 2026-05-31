@@ -9,98 +9,41 @@
   "bugs": {
     "url": "https://github.com/vietspaceanh/python-marked-strings/issues"
   },
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Highlight SQL, Markdown and HTML inside Python marked strings using markers like \"\"\"md, \"\"\"sql, \"\"\"html",
+  "main": "./extension.js",
+  "activationEvents": [
+    "onLanguage:python"
+  ],
   "engines": {
     "vscode": "^1.100.0"
   },
   "categories": [
     "Programming Languages"
   ],
-  "activationEvents": [
-    "onLanguage:python"
-  ],
-  "main": "./extension.js",
   "contributes": {
     "grammars": [
       {
-        "scopeName": "py-marked-strings",
-        "path": "./syntaxes/injection.json",
-        "injectTo": ["source.python"],
-        "embeddedLanguages": {
-          "text.html.markdown": "markdown",
-          "source.sql": "sql",
-          "meta.embedded.block.html": "html"
-        }
+        "path": "./syntaxes/markdown-no-indent.tmLanguage.json",
+        "scopeName": "text.html.markdown.no-indent"
       },
       {
-        "scopeName": "text.html.markdown.indented",
-        "path": "./syntaxes/custom-markdown.json",
+        "path": "./syntaxes/lang-in-python.tmLanguage.json",
+        "scopeName": "injection.marked-strings.python",
+        "injectTo": [
+          "source.python"
+        ],
         "embeddedLanguages": {
-          "meta.embedded.block.css": "css",
-          "meta.embedded.block.html": "html",
-          "meta.embedded.block.ini": "ini",
-          "meta.embedded.block.java": "java",
-          "meta.embedded.block.lua": "lua",
-          "meta.embedded.block.makefile": "makefile",
-          "meta.embedded.block.perl": "perl",
-          "meta.embedded.block.r": "r",
-          "meta.embedded.block.ruby": "ruby",
-          "meta.embedded.block.php": "php",
-          "meta.embedded.block.sql": "sql",
-          "meta.embedded.block.vs_net": "vb",
-          "meta.embedded.block.xml": "xml",
-          "meta.embedded.block.xsl": "xsl",
-          "meta.embedded.block.yaml": "yaml",
-          "meta.embedded.block.dosbatch": "bat",
-          "meta.embedded.block.clojure": "clojure",
-          "meta.embedded.block.coffee": "coffee",
-          "meta.embedded.block.c": "c",
-          "meta.embedded.block.cpp": "cpp",
-          "meta.embedded.block.diff": "diff",
-          "meta.embedded.block.dockerfile": "dockerfile",
-          "meta.embedded.block.git_commit": "git-commit",
-          "meta.embedded.block.git_rebase": "git-rebase",
-          "meta.embedded.block.go": "go",
-          "meta.embedded.block.groovy": "groovy",
-          "meta.embedded.block.pug": "pug",
-          "meta.embedded.block.ignore": "ignore",
-          "meta.embedded.block.javascript": "javascript",
-          "meta.embedded.block.js_regexp": "javascript",
-          "meta.embedded.block.json": "json",
-          "meta.embedded.block.jsonc": "jsonc",
-          "meta.embedded.block.jsonl": "jsonl",
-          "meta.embedded.block.less": "less",
-          "meta.embedded.block.objc": "objc",
-          "meta.embedded.block.swift": "swift",
-          "meta.embedded.block.scss": "scss",
-          "meta.embedded.block.perl6": "perl6",
-          "meta.embedded.block.powershell": "powershell",
-          "meta.embedded.block.python": "python",
-          "meta.embedded.block.julia": "julia",
-          "meta.embedded.block.regexp_python": "python",
-          "meta.embedded.block.rust": "rust",
-          "meta.embedded.block.scala": "scala",
-          "meta.embedded.block.shellscript": "shellscript",
-          "meta.embedded.block.typescript": "typescript",
-          "meta.embedded.block.typescriptreact": "typescriptreact",
-          "meta.embedded.block.csharp": "csharp",
-          "meta.embedded.block.fsharp": "fsharp",
-          "meta.embedded.block.dart": "dart",
-          "meta.embedded.block.handlebars": "handlebars",
           "meta.embedded.block.markdown": "markdown",
-          "meta.embedded.block.log": "log",
-          "meta.embedded.block.erlang": "erlang",
-          "meta.embedded.block.elixir": "elixir",
-          "meta.embedded.block.latex": "latex",
-          "meta.embedded.block.bibtex": "bibtex",
-          "meta.embedded.block.twig": "twig",
-          "meta.embedded.block.yang": "yang",
-          "meta.embedded.block.abap": "abap",
-          "meta.embedded.block.restructuredtext": "restructuredtext",
-          "meta.embedded.block.frontmatter": "yaml"
+          "meta.embedded.block.html": "html",
+          "meta.embedded.block.sql": "sql",
+          "meta.embedded.block.python": "python"
         }
       }
     ]
+  },
+  "devDependencies": {
+    "vscode-oniguruma": "^2.0.1",
+    "vscode-textmate": "^9.3.2"
   }
 }
