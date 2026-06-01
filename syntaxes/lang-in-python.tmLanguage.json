@@ -12,14 +12,14 @@
   "repository": {
     "marked-md-string": {
       "contentName": "meta.embedded.block.markdown",
-      "begin": "^[ \\t]*(return)\\s+(?:\\b([rRuUbBfF]+))?(\"\"\")(md)\\s*$",
+      "begin": "^[ \\t]*(return)\\s+(?:\\b([rRuUbBfF]+))?(\"\"\"|''')(md)\\s*$",
       "beginCaptures": {
         "1": { "name": "keyword.control.flow.python" },
         "2": { "name": "storage.type.string.python" },
         "3": { "name": "punctuation.definition.string.begin.python" },
         "4": { "name": "comment.line.marked-string.python" }
       },
-      "end": "\\s+(\"\"\")(?!\\S)",
+      "end": "\\s+(\"\"\"|''')(?!\\S)",
       "endCaptures": {
         "1": { "name": "punctuation.definition.string.end.python" }
       },
@@ -31,14 +31,14 @@
     },
     "marked-html-string": {
       "contentName": "meta.embedded.block.html",
-      "begin": "^[ \\t]*(return)?\\s*(?:\\b([rRuUbBfF]+))?(\"\"\")(html)\\s*$",
+      "begin": "^[ \\t]*(return)?\\s*(?:\\b([rRuUbBfF]+))?(\"\"\"|''')(html)\\s*$",
       "beginCaptures": {
         "1": { "name": "keyword.control.flow.python" },
         "2": { "name": "storage.type.string.python" },
         "3": { "name": "punctuation.definition.string.begin.python" },
         "4": { "name": "comment.line.marked-string.python" }
       },
-      "end": "\\s+(\"\"\")(?!\\S)",
+      "end": "\\s+(\"\"\"|''')(?!\\S)",
       "endCaptures": {
         "1": { "name": "punctuation.definition.string.end.python" }
       },
@@ -49,14 +49,14 @@
     },
     "marked-sql-string": {
       "contentName": "meta.embedded.block.sql",
-      "begin": "^[ \\t]*(return)?\\s*(?:\\b([rRuUbBfF]+))?(\"\"\")(--sql|sql)\\s*$",
+      "begin": "^[ \\t]*(return)?\\s*(?:\\b([rRuUbBfF]+))?(\"\"\"|''')(--sql|sql)\\s*$",
       "beginCaptures": {
         "1": { "name": "keyword.control.flow.python" },
         "2": { "name": "storage.type.string.python" },
         "3": { "name": "punctuation.definition.string.begin.python" },
         "4": { "name": "comment.line.marked-string.python" }
       },
-      "end": "\\s+(\"\"\")(?!\\S)",
+      "end": "\\s+(\"\"\"|''')(?!\\S)",
       "endCaptures": {
         "1": { "name": "punctuation.definition.string.end.python" }
       },
@@ -220,7 +220,7 @@
       "patterns": [
         {
           "contentName": "meta.embedded.block.markdown",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(md)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -228,7 +228,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(?=\\s*\\)|\\s*$)",
+          "end": "\\s*(\\4)(?=\\s*\\)|\\s*$)",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" }
           },
@@ -240,7 +240,7 @@
         },
         {
           "contentName": "meta.embedded.block.html",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(html)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(html)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -248,7 +248,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(?=\\s*\\)|\\s*$)",
+          "end": "\\s*(\\4)(?=\\s*\\)|\\s*$)",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" }
           },
@@ -259,7 +259,7 @@
         },
         {
           "contentName": "meta.embedded.block.sql",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(--sql|sql)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(--sql|sql)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -267,7 +267,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(?=\\s*\\)|\\s*$)",
+          "end": "\\s*(\\4)(?=\\s*\\)|\\s*$)",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" }
           },
@@ -281,7 +281,7 @@
       "patterns": [
         {
           "contentName": "meta.embedded.block.markdown",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(md)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -289,7 +289,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(\\s*\\))?",
+          "end": "\\s*(\\4)(\\s*\\))?",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" },
             "2": { "name": "punctuation.definition.arguments.end.python" }
@@ -302,7 +302,7 @@
         },
         {
           "contentName": "meta.embedded.block.html",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(html)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(html)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -310,7 +310,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(\\s*\\))?",
+          "end": "\\s*(\\4)(\\s*\\))?",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" },
             "2": { "name": "punctuation.definition.arguments.end.python" }
@@ -322,7 +322,7 @@
         },
         {
           "contentName": "meta.embedded.block.sql",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\")(--sql|sql)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(--sql|sql)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -330,7 +330,7 @@
             "4": { "name": "punctuation.definition.string.begin.python" },
             "5": { "name": "comment.line.marked-string.python" }
           },
-          "end": "\\s*(\"\"\")(\\s*\\))?",
+          "end": "\\s*(\\4)(\\s*\\))?",
           "endCaptures": {
             "1": { "name": "punctuation.definition.string.end.python" },
             "2": { "name": "punctuation.definition.arguments.end.python" }
