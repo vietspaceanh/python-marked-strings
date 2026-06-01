@@ -126,3 +126,45 @@ def use_el():
 
 def after_el():
     pass
+
+
+@el
+def staging_tables():
+    return '''md
+    ```python
+    @tbl
+    def stg_orders(path=orders_path):
+        return f"""--sql
+        from '{path}'
+        select
+            id as order_id,
+            user_id as customer_id,
+            order_date,
+            status
+        """
+
+    @tbl
+    def stg_payments(path=payments_path):
+        return f"""--sql
+        from '{path}'
+        select
+            id as payment_id,
+            order_id,
+            payment_method,
+            amount / 100 as amount
+        """
+
+    @tbl
+    def stg_customers(path=customers_path):
+        return f"""--sql
+        from '{path}'
+        select
+            id as customer_id,
+            first_name,
+            last_name
+        """
+        ```
+    '''
+
+def after_singleq_md():
+    pass

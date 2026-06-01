@@ -43,7 +43,7 @@ async function main() {
         scopes.includes('embedded.block.html') ||
         scopes.includes('embedded.block.sql');
       const hasString = scopes.includes('string.quoted.multi') || scopes.includes('string.quoted.docstring');
-      if (isEmbedded || hasString || text.includes('"""') || text.includes('def ') || text.includes('sql(')) {
+      if (isEmbedded || hasString || text.includes('"""') || text.includes("'''") || text.includes('def ') || text.includes('sql(')) {
         const label = hasString ? 'STRING' : isEmbedded ? 'EMBED' : 'OTHER';
         console.log(`  L${n} ${label.padEnd(6)} "${text}"  ${scopes}`);
       }
@@ -51,7 +51,7 @@ async function main() {
   }
 
   // Verify functions after each block are clean
-  const checks = ['after_md', 'after_html', 'after_sql', 'after_query_dash', 'after_all', 'after_el'];
+  const checks = ['after_md', 'after_html', 'after_sql', 'after_query_dash', 'after_all', 'after_el', 'after_singleq_md'];
   stack = INITIAL;
   for (let n = 0; n < lines.length; n++) {
     const r = g.tokenizeLine(lines[n], stack);

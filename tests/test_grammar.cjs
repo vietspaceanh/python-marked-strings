@@ -130,6 +130,78 @@ def test2():
       }
     },
     {
+      name: "return '''md — markdown with single-quote triple quotes",
+      code: `def test():
+    return '''md
+    # Heading
+    - list
+    **bold**
+    '''`,
+      check: (tokens) => {
+        let hasMarkdown = false;
+        let hasStringOnMarkdown = false;
+        for (const t of tokens) {
+          const isMarkdown = t.scopes.some(s => s.includes('heading') || s.includes('list') || s.includes('bold'));
+          if (isMarkdown) {
+            hasMarkdown = true;
+            if (t.scopes.some(s => s.includes('string.quoted.multi')))
+              hasStringOnMarkdown = true;
+          }
+        }
+        return hasMarkdown && !hasStringOnMarkdown;
+      }
+    },
+    {
+      name: "el('''md...''') — content gets markdown scopes not string",
+      code: `some_code = el('''md
+    # Heading
+    - list
+    **bold**
+    ''')`,
+      check: (tokens) => {
+        let hasMarkdown = false;
+        let hasStringOnMarkdown = false;
+        for (const t of tokens) {
+          const isMarkdown = t.scopes.some(s => s.includes('heading') || s.includes('list') || s.includes('bold'));
+          if (isMarkdown) {
+            hasMarkdown = true;
+            if (t.scopes.some(s => s.includes('string.quoted.multi')))
+              hasStringOnMarkdown = true;
+          }
+        }
+        return hasMarkdown && !hasStringOnMarkdown;
+      }
+    },
+    {
+      name: "return '''md with nested f\"\"\"--sql — single-quote markdown containing double-quote SQL",
+      code: `def test():
+    return '''md
+    \`stg_customers\`: their \`id\`.
+
+    {
+        sql(f"""
+            from stg_customers
+            limit 5
+        """)
+    }
+    '''`,
+      check: (tokens) => {
+        let hasMarkdown = false;
+        let hasStringOnMarkdown = false;
+        for (const t of tokens) {
+          const isMarkdown = t.scopes.some(s => s.includes('embedded.block.markdown'));
+          if (isMarkdown) {
+            hasMarkdown = true;
+          }
+          const isEmbedded = t.scopes.some(s => s.includes('embedded.block.sql'));
+          if (isEmbedded && t.scopes.some(s => s.includes('string.quoted.multi'))) {
+            hasStringOnMarkdown = true;
+          }
+        }
+        return hasMarkdown;
+      }
+    },
+    {
       name: 'x = """md — content HAS string scope (no return keyword)',
       code: `x = """md
     ## 1. Existing building blocks
