@@ -49,6 +49,169 @@ function isInSqlRegion(doc, pos) {
   return false;
 }
 
+const MARKERS = ['md', 'sql', 'html', '--sql'];
+
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function findClose(document, startLine, quoteStyle, funcCall) {
+  const escaped = escapeRegex(quoteStyle);
+  const markerPattern = new RegExp(escaped + '\\s*(' + MARKERS.join('|') + ')\\b');
+  const funcOpenPattern = new RegExp('\\b(sql|plot|el)\\s*\\(\\s*[rRuUbBfF]*' + escaped);
+  const closeAtEnd = new RegExp(escaped + '\\s*$');
+  const closeOnOwnLine = new RegExp('^\\s*' + escaped + '\\s*$');
+  const closeFuncCall = new RegExp(escaped + '\\s*\\)');
+
+  for (let line = startLine; line < document.lineCount; line++) {
+    const text = document.lineAt(line).text;
+    if (markerPattern.test(text)) continue;
+    if (funcOpenPattern.test(text)) continue;
+    if (funcCall) {
+      if (closeFuncCall.test(text)) return line;
+    }
+    if (closeOnOwnLine.test(text)) return line;
+    if (closeAtEnd.test(text)) return line;
+  }
+  return -1;
+}
+
+function tryOpenMarkedString(text, line, document) {
+  const m3 = text.match(new RegExp('\\b(el)\\s*\\(\\s*("""|\'\'\')\\s*(' + MARKERS.join('|') + ')\\b'));
+  if (m3) {
+    const closeLine = findClose(document, line + 1, m3[2], true);
+    if (closeLine > line) {
+      return { openLine: line, closeLine, markerType: m3[3] };
+    }
+  }
+
+  const m2 = text.match(/\b(sql|plot)\s*\(\s*("""|''')/);
+  if (m2) {
+    const closeLine = findClose(document, line + 1, m2[2], true);
+    if (closeLine > line) {
+      return { openLine: line, closeLine, markerType: 'sql' };
+    }
+  }
+
+  const m1 = text.match(new RegExp('("""|\'\'\')\\s*(' + MARKERS.join('|') + ')\\b'));
+  if (m1) {
+    const closeLine = findClose(document, line + 1, m1[1], false);
+    if (closeLine > line) {
+      return { openLine: line, closeLine, markerType: m1[2] };
+    }
+  }
+
+  return null;
+}
+
+function findCodeFenceFolds(document, startLine, endLine) {
+  const ranges = [];
+  let line = startLine;
+  while (line <= endLine) {
+    const text = document.lineAt(line).text;
+    const fenceMatch = text.match(/^\s*(```+)\s*(\w*)\s*$/);
+    if (fenceMatch) {
+      const fenceLen = fenceMatch[1].length;
+      const closePattern = new RegExp('^\\s*`{' + fenceLen + ',}\\s*$');
+      let closeLine = -1;
+      for (let j = line + 1; j <= endLine; j++) {
+        if (closePattern.test(document.lineAt(j).text)) {
+          closeLine = j;
+          break;
+        }
+      }
+      if (closeLine >= line + 2) {
+        ranges.push(new vscode.FoldingRange(line, closeLine, vscode.FoldingRangeKind.Region));
+      }
+      line = closeLine >= 0 ? closeLine : line;
+    }
+    line++;
+  }
+  return ranges;
+}
+
+function findIndentationFolds(document, startLine, endLine) {
+  const ranges = [];
+  if (startLine >= endLine) return ranges;
+
+  const indents = [];
+  for (let i = startLine; i <= endLine; i++) {
+    const text = document.lineAt(i).text;
+    indents.push(text.trim() === '' ? -1 : text.search(/\S/));
+  }
+
+  let baseIndent = -1;
+  for (const level of indents) {
+    if (level >= 0) { baseIndent = level; break; }
+  }
+  if (baseIndent < 0) return ranges;
+
+  const MIN_FOLD_LINES = 2;
+  let i = 0;
+  while (i < indents.length) {
+    if (indents[i] > baseIndent) {
+      const blockStart = i;
+      const blockIndent = indents[i];
+      let j = i + 1;
+      while (j < indents.length) {
+        if (indents[j] >= 0 && indents[j] <= blockIndent) break;
+        j++;
+      }
+      const blockEnd = j - 1;
+      if (blockEnd - blockStart >= MIN_FOLD_LINES) {
+        ranges.push(new vscode.FoldingRange(
+          startLine + blockStart, startLine + blockEnd, vscode.FoldingRangeKind.Region
+        ));
+      }
+      i = j;
+    } else {
+      i++;
+    }
+  }
+  return ranges;
+}
+
+function provideFoldingRanges(document) {
+  const ranges = [];
+  const lineCount = document.lineCount;
+  let line = 0;
+
+  while (line < lineCount) {
+    const text = document.lineAt(line).text;
+    const region = tryOpenMarkedString(text, line, document);
+
+    if (region) {
+      if (region.closeLine - region.openLine >= 2) {
+        ranges.push(new vscode.FoldingRange(
+          region.openLine, region.closeLine, vscode.FoldingRangeKind.Region
+        ));
+      }
+
+      const contentStart = region.openLine + 1;
+      const contentEnd = region.closeLine - 1;
+
+      if (region.markerType === 'md' && contentStart <= contentEnd) {
+        const fenceRanges = findCodeFenceFolds(document, contentStart, contentEnd);
+        ranges.push(...fenceRanges);
+      }
+
+      if (contentStart <= contentEnd) {
+        const indentRanges = findIndentationFolds(document, contentStart, contentEnd);
+        ranges.push(...indentRanges);
+      }
+
+      line = region.closeLine + 1;
+    } else {
+      line++;
+    }
+  }
+
+  const docIndentFolds = findIndentationFolds(document, 0, lineCount - 1);
+  ranges.push(...docIndentFolds);
+
+  return ranges;
+}
+
 function activate(context) {
   const provider = vscode.languages.registerCompletionItemProvider(
     { language: 'python', scheme: 'file' },
@@ -67,6 +230,13 @@ function activate(context) {
   );
 
   context.subscriptions.push(provider);
+
+  context.subscriptions.push(
+    vscode.languages.registerFoldingRangeProvider(
+      { language: 'python', scheme: 'file' },
+      { provideFoldingRanges }
+    )
+  );
 }
 
 function deactivate() {}
