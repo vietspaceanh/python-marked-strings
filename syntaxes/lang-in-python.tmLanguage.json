@@ -2,6 +2,7 @@
   "scopeName": "injection.marked-strings.python",
   "injectionSelector": "L:source.python -string",
   "patterns": [
+    { "include": "#marked-md-string-f" },
     { "include": "#marked-md-string" },
     { "include": "#marked-html-string" },
     { "include": "#marked-sql-string" },
@@ -10,9 +11,9 @@
     { "include": "#el-arg-pattern" }
   ],
   "repository": {
-    "marked-md-string": {
+    "marked-md-string-f": {
       "contentName": "meta.embedded.block.markdown",
-      "begin": "^[ \\t]*(return)\\s+(?:\\b([rRuUbBfF]+))?(\"\"\"|''')(md)\\s*$",
+      "begin": "^[ \\t]*(return)\\s+\\b([rRuUbBfF]*[fF][rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
       "beginCaptures": {
         "1": { "name": "keyword.control.flow.python" },
         "2": { "name": "storage.type.string.python" },
@@ -26,7 +27,28 @@
       "patterns": [
         { "include": "#comment-block" },
         { "include": "#md-block" },
-        { "include": "text.html.markdown.no-indent#inline" }
+        { "include": "text.html.markdown.no-indent#inline" },
+        { "match": "['\"]" }
+      ]
+    },
+    "marked-md-string": {
+      "contentName": "meta.embedded.block.markdown",
+      "begin": "^[ \\t]*(return)\\s+(?:\\b([rRuUbB]*))?(\"\"\"|''')(md)\\s*$",
+      "beginCaptures": {
+        "1": { "name": "keyword.control.flow.python" },
+        "2": { "name": "storage.type.string.python" },
+        "3": { "name": "punctuation.definition.string.begin.python" },
+        "4": { "name": "comment.line.marked-string.python" }
+      },
+      "end": "\\s+(\"\"\"|''')(?!\\S)",
+      "endCaptures": {
+        "1": { "name": "punctuation.definition.string.end.python" }
+      },
+      "patterns": [
+        { "include": "#comment-block" },
+        { "include": "#md-block-no-fstring" },
+        { "include": "text.html.markdown.no-indent#inline" },
+        { "match": "['\"]" }
       ]
     },
     "marked-html-string": {
@@ -44,7 +66,8 @@
       },
       "patterns": [
         { "include": "#comment-block" },
-        { "include": "text.html.basic" }
+        { "include": "text.html.basic" },
+        { "match": "['\"]" }
       ]
     },
     "marked-sql-string": {
@@ -61,7 +84,8 @@
         "1": { "name": "punctuation.definition.string.end.python" }
       },
       "patterns": [
-        { "include": "source.sql" }
+        { "include": "source.sql" },
+        { "match": "['\"]" }
       ]
     },
     "comment-block": {
@@ -91,7 +115,8 @@
             "1": { "name": "punctuation.definition.string.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -108,7 +133,8 @@
             "1": { "name": "punctuation.definition.string.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         }
       ]
@@ -116,6 +142,11 @@
     "md-block": {
       "patterns": [
         { "include": "#fstring-expr" },
+        { "include": "#md-block-inner" }
+      ]
+    },
+    "md-block-no-fstring": {
+      "patterns": [
         { "include": "#md-block-inner" }
       ]
     },
@@ -132,7 +163,8 @@
           "end": "$",
           "name": "markup.list.unnumbered.markdown",
           "patterns": [
-            { "include": "text.html.markdown.no-indent#inline" }
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -143,7 +175,8 @@
           "end": "$",
           "name": "markup.list.numbered.markdown",
           "patterns": [
-            { "include": "text.html.markdown.no-indent#inline" }
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -154,7 +187,8 @@
           "end": "$",
           "name": "markup.quote.markdown",
           "patterns": [
-            { "include": "text.html.markdown.no-indent#inline" }
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
           ]
         }
       ]
@@ -193,7 +227,8 @@
             "2": { "name": "punctuation.definition.arguments.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -211,7 +246,8 @@
             "2": { "name": "punctuation.definition.arguments.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         }
       ]
@@ -220,7 +256,7 @@
       "patterns": [
         {
           "contentName": "meta.embedded.block.markdown",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*[fF][rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -235,7 +271,29 @@
           "patterns": [
             { "include": "#comment-block" },
             { "include": "#md-block" },
-            { "include": "text.html.markdown.no-indent#inline" }
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
+          ]
+        },
+        {
+          "contentName": "meta.embedded.block.markdown",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbB]*)(\"\"\"|''')(md)\\s*$",
+          "beginCaptures": {
+            "1": { "name": "support.function.python" },
+            "2": { "name": "punctuation.definition.arguments.begin.python" },
+            "3": { "name": "storage.type.string.python" },
+            "4": { "name": "punctuation.definition.string.begin.python" },
+            "5": { "name": "comment.line.marked-string.python" }
+          },
+          "end": "\\s*(\\4)(?=\\s*\\)|\\s*$)",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.string.end.python" }
+          },
+          "patterns": [
+            { "include": "#comment-block" },
+            { "include": "#md-block-no-fstring" },
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -254,7 +312,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
-            { "include": "text.html.basic" }
+            { "include": "text.html.basic" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -272,7 +331,8 @@
             "1": { "name": "punctuation.definition.string.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         }
       ]
@@ -281,7 +341,7 @@
       "patterns": [
         {
           "contentName": "meta.embedded.block.markdown",
-          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbBfF]*[fF][rRuUbBfF]*)(\"\"\"|''')(md)\\s*$",
           "beginCaptures": {
             "1": { "name": "support.function.python" },
             "2": { "name": "punctuation.definition.arguments.begin.python" },
@@ -297,7 +357,30 @@
           "patterns": [
             { "include": "#comment-block" },
             { "include": "#md-block" },
-            { "include": "text.html.markdown.no-indent#inline" }
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
+          ]
+        },
+        {
+          "contentName": "meta.embedded.block.markdown",
+          "begin": "\\b(el)(\\s*\\()\\s*([rRuUbB]*)(\"\"\"|''')(md)\\s*$",
+          "beginCaptures": {
+            "1": { "name": "support.function.python" },
+            "2": { "name": "punctuation.definition.arguments.begin.python" },
+            "3": { "name": "storage.type.string.python" },
+            "4": { "name": "punctuation.definition.string.begin.python" },
+            "5": { "name": "comment.line.marked-string.python" }
+          },
+          "end": "\\s*(\\4)(\\s*\\))?",
+          "endCaptures": {
+            "1": { "name": "punctuation.definition.string.end.python" },
+            "2": { "name": "punctuation.definition.arguments.end.python" }
+          },
+          "patterns": [
+            { "include": "#comment-block" },
+            { "include": "#md-block-no-fstring" },
+            { "include": "text.html.markdown.no-indent#inline" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -317,7 +400,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
-            { "include": "text.html.basic" }
+            { "include": "text.html.basic" },
+            { "match": "['\"]" }
           ]
         },
         {
@@ -336,7 +420,8 @@
             "2": { "name": "punctuation.definition.arguments.end.python" }
           },
           "patterns": [
-            { "include": "source.sql" }
+            { "include": "source.sql" },
+            { "match": "['\"]" }
           ]
         }
       ]

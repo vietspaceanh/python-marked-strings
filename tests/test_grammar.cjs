@@ -215,6 +215,42 @@ def test2():
         return false;
       }
     },
+    {
+      name: "Single/double quotes in md content — not treated as Python strings",
+      code: `def test():
+    return """md
+    Let's break down the "problem"
+    it's used:** to prove it
+    """`,
+      check: (tokens) => {
+        for (const t of tokens) {
+          if (t.line.includes("Let's") || t.line.includes("it's")) {
+            if (t.scopes.some(s => s.includes('string.quoted.single')))
+              return false;
+          }
+        }
+        return true;
+      }
+    },
+    {
+      name: "r-string with LaTeX braces — no fstring-expr leaking",
+      code: `def test():
+    return r"""md
+    Let's break down $SS_{between}$ and $SS_{within}$.
+    it's used:** to prove it
+    """`,
+      check: (tokens) => {
+        for (const t of tokens) {
+          if (t.line.includes("Let's") || t.line.includes("it's")) {
+            if (t.scopes.some(s => s.includes('string.quoted.single')))
+              return false;
+            if (t.scopes.some(s => s.includes('embedded.block.python')))
+              return false;
+          }
+        }
+        return true;
+      }
+    },
   ];
 
   for (const test of tests) {
