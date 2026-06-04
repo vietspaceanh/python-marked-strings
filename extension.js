@@ -130,6 +130,32 @@ function findCodeFenceFolds(document, startLine, endLine) {
   return ranges;
 }
 
+function findHeaderFolds(document, startLine, endLine) {
+  const headers = [];
+  for (let i = startLine; i <= endLine; i++) {
+    const match = document.lineAt(i).text.match(/^\s*(#{1,6})\s/);
+    if (match) {
+      headers.push({ line: i, level: match[1].length });
+    }
+  }
+
+  const ranges = [];
+  for (let i = 0; i < headers.length; i++) {
+    const header = headers[i];
+    let foldEnd = endLine;
+    for (let j = i + 1; j < headers.length; j++) {
+      if (headers[j].level <= header.level) {
+        foldEnd = headers[j].line - 1;
+        break;
+      }
+    }
+    if (foldEnd > header.line) {
+      ranges.push(new vscode.FoldingRange(header.line, foldEnd, vscode.FoldingRangeKind.Region));
+    }
+  }
+  return ranges;
+}
+
 function findIndentationFolds(document, startLine, endLine) {
   const ranges = [];
   if (startLine >= endLine) return ranges;
@@ -193,6 +219,8 @@ function provideFoldingRanges(document) {
       if (region.markerType === 'md' && contentStart <= contentEnd) {
         const fenceRanges = findCodeFenceFolds(document, contentStart, contentEnd);
         ranges.push(...fenceRanges);
+        const headerRanges = findHeaderFolds(document, contentStart, contentEnd);
+        ranges.push(...headerRanges);
       }
 
       if (contentStart <= contentEnd) {
