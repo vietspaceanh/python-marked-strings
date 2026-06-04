@@ -251,6 +251,40 @@ def test2():
         return true;
       }
     },
+    {
+      name: "Inline math $...$ gets math scopes on delimiters",
+      code: `def test():
+    return r"""md
+    The formula is $F = x + y$ here.
+    """`,
+      check: (tokens) => {
+        let foundBegin = false;
+        let foundEnd = false;
+        for (const t of tokens) {
+          if (t.text === '$' && t.scopes.some(s => s.includes('punctuation.definition.math.begin')))
+            foundBegin = true;
+          if (t.text === '$' && t.scopes.some(s => s.includes('punctuation.definition.math.end')))
+            foundEnd = true;
+        }
+        return foundBegin && foundEnd;
+      }
+    },
+    {
+      name: "Math content has numbers, brackets, operators highlighted",
+      code: `def test():
+    return r"""md
+    $$F = \\frac{MS_{between}}{MS_{within}} = \\frac{\\frac{SS_{between}}{df_{between}}}{\\frac{SS_{within}}{df_{within}}}$$
+    """`,
+      check: (tokens) => {
+        let hasNumber = false;
+        let hasMath = false;
+        for (const t of tokens) {
+          if (t.scopes.some(s => s.includes('constant.numeric'))) hasNumber = true;
+          if (t.scopes.some(s => s.includes('markup.math.block'))) hasMath = true;
+        }
+        return hasNumber || hasMath;
+      }
+    },
   ];
 
   for (const test of tests) {

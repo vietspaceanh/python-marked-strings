@@ -26,6 +26,8 @@
       },
       "patterns": [
         { "include": "#comment-block" },
+        { "include": "#math-display" },
+        { "include": "#math-inline" },
         { "include": "#md-block" },
         { "include": "text.html.markdown.no-indent#inline" },
         { "match": "['\"]" }
@@ -46,6 +48,8 @@
       },
       "patterns": [
         { "include": "#comment-block" },
+        { "include": "#math-display" },
+        { "include": "#math-inline" },
         { "include": "#md-block-no-fstring" },
         { "include": "text.html.markdown.no-indent#inline" },
         { "match": "['\"]" }
@@ -150,8 +154,39 @@
         { "include": "#md-block-inner" }
       ]
     },
+    "math-display": {
+      "match": "(?<!\\$)(\\$\\$)(?!\\$)([^$]+)(?<!\\$)(\\$\\$)(?!\\$)",
+      "captures": {
+        "1": { "name": "punctuation.definition.math.begin.markdown" },
+        "2": { "name": "markup.math.block.markdown", "patterns": [
+          { "include": "text.tex.latex" },
+          { "match": "\\d+(?:\\.\\d+)?", "name": "constant.numeric.math.markdown" },
+          { "match": "\\{", "name": "punctuation.definition.group.bracket.begin.tex" },
+          { "match": "\\}", "name": "punctuation.definition.group.bracket.end.tex" },
+          { "match": "[_^]", "name": "keyword.operator.math.markdown" },
+          { "match": "[=+\\-*/<>]", "name": "keyword.operator.math.markdown" }
+        ] },
+        "3": { "name": "punctuation.definition.math.end.markdown" }
+      }
+    },
+    "math-inline": {
+      "match": "(?<!\\$)(\\$)(?!\\$)([^\\s$](?:[^$\\n]*[^\\s$])?)(\\$)(?!\\$)",
+      "captures": {
+        "1": { "name": "punctuation.definition.math.begin.markdown" },
+        "2": { "name": "markup.math.inline.markdown", "patterns": [
+          { "include": "text.tex.latex" },
+          { "match": "\\d+(?:\\.\\d+)?", "name": "constant.numeric.math.markdown" },
+          { "match": "\\{", "name": "punctuation.definition.group.bracket.begin.tex" },
+          { "match": "\\}", "name": "punctuation.definition.group.bracket.end.tex" },
+          { "match": "[_^]", "name": "keyword.operator.math.markdown" },
+          { "match": "[=+\\-*/<>]", "name": "keyword.operator.math.markdown" }
+        ] },
+        "3": { "name": "punctuation.definition.math.end.markdown" }
+      }
+    },
     "md-block-inner": {
       "patterns": [
+        { "include": "#math-display" },
         { "include": "text.html.markdown.no-indent#heading" },
         { "include": "text.html.markdown.no-indent#separator" },
         { "include": "text.html.markdown.no-indent#fenced_code_block" },
@@ -163,6 +198,7 @@
           "end": "$",
           "name": "markup.list.unnumbered.markdown",
           "patterns": [
+            { "include": "#math-inline" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
           ]
@@ -175,6 +211,7 @@
           "end": "$",
           "name": "markup.list.numbered.markdown",
           "patterns": [
+            { "include": "#math-inline" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
           ]
@@ -187,6 +224,7 @@
           "end": "$",
           "name": "markup.quote.markdown",
           "patterns": [
+            { "include": "#math-inline" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
           ]
@@ -270,6 +308,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
+            { "include": "#math-display" },
+            { "include": "#math-inline" },
             { "include": "#md-block" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
@@ -291,6 +331,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
+            { "include": "#math-display" },
+            { "include": "#math-inline" },
             { "include": "#md-block-no-fstring" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
@@ -356,6 +398,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
+            { "include": "#math-display" },
+            { "include": "#math-inline" },
             { "include": "#md-block" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
@@ -378,6 +422,8 @@
           },
           "patterns": [
             { "include": "#comment-block" },
+            { "include": "#math-display" },
+            { "include": "#math-inline" },
             { "include": "#md-block-no-fstring" },
             { "include": "text.html.markdown.no-indent#inline" },
             { "match": "['\"]" }
