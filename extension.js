@@ -109,7 +109,7 @@ function findCodeFenceFolds(document, startLine, endLine) {
   let line = startLine;
   while (line <= endLine) {
     const text = document.lineAt(line).text;
-    const fenceMatch = text.match(/^\s*(```+)\s*(\w*)\s*$/);
+    const fenceMatch = text.match(/^\s*(```+)\s*(.*)$/);
     if (fenceMatch) {
       const fenceLen = fenceMatch[1].length;
       const closePattern = new RegExp('^\\s*`{' + fenceLen + ',}\\s*$');
